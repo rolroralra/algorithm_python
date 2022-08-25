@@ -1,15 +1,14 @@
 import sys
 
+sys.stdin = open('sample_input.txt')
 input = sys.stdin.readline
 
 if __name__ == '__main__':
-    with open('sample_input.txt') as f:
-        lines = [line.rstrip() for line in f]
 
-    test_case_total_count = int(lines.pop())
+    test_case_total_count = int(input())
 
     for test_case in range(test_case_total_count):
-        answer = 0
+        answer = int(input())
 
         # TODO: Implementation
 
