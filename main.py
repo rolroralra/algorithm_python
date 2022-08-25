@@ -1,3 +1,7 @@
+import sys
+
+input = sys.stdin.readline
+
 if __name__ == '__main__':
     with open('sample_input.txt') as f:
         lines = [line.rstrip() for line in f]
