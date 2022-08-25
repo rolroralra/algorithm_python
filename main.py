@@ -1,6 +1,6 @@
 import sys
 
-sys.stdin = open('sample_input.txt')
+# sys.stdin = open('sample_input.txt')
 input = sys.stdin.readline
 
 if __name__ == '__main__':
