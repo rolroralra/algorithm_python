@@ -1,4 +1,3 @@
-import math
 from sys import stdin
 
 new_input = stdin.readline
