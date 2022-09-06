@@ -1,5 +1,5 @@
 from sys import stdin
-stdin = open("../../sample_input.txt")
+stdin = open("../../../sample_input.txt")
 new_input = stdin.readline
 
 if __name__ == '__main__':

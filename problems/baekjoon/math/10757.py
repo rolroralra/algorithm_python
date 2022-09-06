@@ -1,6 +1,6 @@
 from sys import stdin
 
-stdin = open('../../sample_input.txt')
+stdin = open('../../../sample_input.txt')
 input = stdin.readline
 
 
