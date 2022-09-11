@@ -1,1 +1,1 @@
-from sorting import *
+from algorithm.sort.sorting import *
