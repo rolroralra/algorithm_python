@@ -229,7 +229,7 @@ else:
   <p>
     
 ```python
-import fucntools
+import functools
 ```
   </p>
 </details>
