@@ -5,8 +5,6 @@ class TreeNode:
         self.left = left
         self.right = right
 
-from queue import Queue
-from functools import reduce
 
 class Solution:
     def binary_tree_paths(self, root: TreeNode) -> list[str]:
