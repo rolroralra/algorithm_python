@@ -3,11 +3,11 @@
 import sys
 
 sys.stdin = open('sample_input.txt')
-input = sys.stdin.readline
+readline = sys.stdin.readline
 
 if __name__ == '__main__':
 
-    test_case_total_count = int(input())
+    test_case_total_count = int(readline())
 
     for test_case in range(test_case_total_count):
         answer = int(input())

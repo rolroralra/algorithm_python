@@ -1,12 +1,12 @@
 import sys
 
 if __name__ == '__main__':
-    getInput = sys.stdin.readline
+    readline = sys.stdin.readline
 
-    N = int(getInput())
-    M = int(getInput())
+    N = int(readline())
+    M = int(readline())
 
-    arr = list(map(int, getInput().split()))
+    arr = list(map(int, readline().split()))
 
     arr.sort()
 
