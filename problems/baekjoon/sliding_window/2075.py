@@ -1,15 +1,15 @@
-from sys import stdin
-from queue import PriorityQueue
+import sys
 import heapq
 
-new_input = stdin.readline
 
 if __name__ == '__main__':
-    n = int(new_input())
+    readline = sys.stdin.readline
+
+    n = int(readline())
 
     heap = []
     for _ in range(n):
-        for v in list(map(int, new_input().split())):
+        for v in list(map(int, readline().split())):
             heapq.heappush(heap, v)
 
             if len(heap) > n:
