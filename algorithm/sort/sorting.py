@@ -40,24 +40,24 @@ class Sort:
         cls.__merge_sort(array, 0, len(array), comp)
 
     @classmethod
-    def __merge_sort(cls, array, start, end, comp=lambda a, b: a > b):
-        if end - start <= 1:
+    def __merge_sort(cls, array, start_inclusive, end_exclusive, comp=lambda a, b: a > b):
+        if end_exclusive - start_inclusive <= 1:
             return
 
-        mid = int((start + end) / 2)
-        cls.__merge_sort(array, start, mid, comp)
-        cls.__merge_sort(array, mid, end, comp)
-        cls.__merge(array, start, mid, end)
+        mid = (start_inclusive + end_exclusive) // 2
+        cls.__merge_sort(array, start_inclusive, mid, comp)
+        cls.__merge_sort(array, mid, end_exclusive, comp)
+        cls.__merge(array, start_inclusive, mid, end_exclusive)
 
     @classmethod
-    def __merge(cls, array, start, mid, end, comp=lambda a, b: a > b):
-        i = start
+    def __merge(cls, array, start_inclusive, mid, end_exclusive, comp=lambda a, b: a > b):
+        i = start_inclusive
         j = mid
         k = 0
 
-        merged_array = [0] * (end - start)
+        merged_array = [0] * (end_exclusive - start_inclusive)
 
-        while i < mid and j < end:
+        while i < mid and j < end_exclusive:
             if comp(array[i], array[j]):
                 merged_array[k] = array[j]
                 j += 1
@@ -71,31 +71,34 @@ class Sort:
             i += 1
             k += 1
 
-        while j < end:
+        while j < end_exclusive:
             merged_array[k] = array[j]
             j += 1
             k += 1
 
-        array[start:end] = merged_array[0:k]
+        array[start_inclusive:end_exclusive] = merged_array[0:k]
 
     @classmethod
     def quick_sort(cls, array, comp=lambda a, b: a > b):
         cls.__quick_sort(array, 0, len(array), comp)
 
     @classmethod
-    def __quick_sort(cls, array, start, end, comp=lambda a, b: a > b):
-        if end - start <= 1:
+    def __quick_sort(cls, array, start_inclusive, end_exclusive, comp=lambda a, b: a > b):
+        if end_exclusive - start_inclusive <= 1:
             return
 
-        index = start
-        for i in range(start, end):
-            if comp(array[start], array[i]):
+        pivot_index = start_inclusive # can be modified in range (start_inclusive, end_inclusive)
+        array[pivot_index], array[start_inclusive] = array[start_inclusive], array[pivot_index]
+
+        index = start_inclusive
+        for i in range(start_inclusive + 1, end_exclusive):
+            if comp(array[start_inclusive], array[i]):
                 index += 1
                 array[index], array[i] = array[i], array[index]
 
-        array[start], array[index] = array[index], array[start]
-        cls.__quick_sort(array, start, index)
-        cls.__quick_sort(array, index + 1, end)
+        array[pivot_index], array[index] = array[index], array[pivot_index]
+        cls.__quick_sort(array, start_inclusive, index)
+        cls.__quick_sort(array, index + 1, end_exclusive)
 
     @staticmethod
     def heap_sort(array, comp=lambda a, b: a > b):
@@ -127,9 +130,11 @@ class Sort:
         array[index1] = array[index2]
         array[index2] = temp
 
+import random
 
 if __name__ == '__main__':
     original_list = [8, 7, 6, 5, 4, 3, 2, 1]
+    random.shuffle(original_list)
 
     print(Sort.sort(original_list, algorithm=Sort.bubble_sort))
 
