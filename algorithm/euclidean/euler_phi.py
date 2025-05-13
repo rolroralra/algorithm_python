@@ -1,7 +1,7 @@
 import math
 
 class EulerPhi:
-
+    __slots__ = ['max_number', 'phi_values']
 
     def __init__(self):
         self.max_number = None
@@ -11,7 +11,6 @@ class EulerPhi:
     def init(self, N):
         self.max_number = N
         self.phi_values = [i for i in range(0, N + 1)]
-
 
         for i in range(2, N + 1):
             if self.phi_values[i] == i:
