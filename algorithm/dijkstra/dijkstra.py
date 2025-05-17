@@ -60,3 +60,17 @@ def dijkstra_by_heapq(adj_list: list[list[tuple]], start_index: int):
                 heapq.heappush(priority_queue, (distance[next_index], next_index))
 
     return distance, prev_index
+
+
+def shortest_path(prev_index: list[int], target_index):
+    vertex_count = len(prev_index)
+    stack = []
+
+    index = target_index
+    while index != -1:
+        stack.append(index)
+        index = prev_index[index]
+
+    stack.reverse()
+
+    return stack
