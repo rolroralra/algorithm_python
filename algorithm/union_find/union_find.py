@@ -1,3 +1,17 @@
+class UnionFind:
+    def __init__(self, size: int):
+        assert size > 0
+        self.parent = [-1] * size
+
+
+    def union(self, a: int, b: int):
+        union(self.parent, a, b)
+
+
+    def find(self, a: int):
+        return find(self.parent, a)
+
+
 def union(parent: list[int], a: int, b: int):
     root_a = find(parent, a)
     root_b = find(parent, b)
