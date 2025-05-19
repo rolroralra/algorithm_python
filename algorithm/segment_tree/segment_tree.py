@@ -3,15 +3,17 @@ import operator
 class SegmentTree:
     BASE_INDEX = 0
 
-    def __init__(self, size: int, binary_operator=operator.add):
+    def __init__(self, size: int, binary_operator=operator.add, identity=0):
         assert size > 0
 
+        self.operator = binary_operator
+        self.indentity = identity
         self.size = size
+
         base_size = 1 << (size - 1).bit_length()
         self.base_index = base_size - 1
         self.tree_size = base_size * 2 - 1
-        self.tree = [None] * self.tree_size
-        self.operator = binary_operator
+        self.tree = [self.indentity] * self.tree_size
         self.ROOT_NODE = (self.BASE_INDEX, 0, self.size - 1)
 
 
@@ -91,15 +93,15 @@ class SegmentTree:
         left_index = self.base_index + start_index
         right_index = self.base_index + end_index
 
-        result = 0
+        result = self.identity
 
         while left_index <= right_index:
             if left_index % 2 == 0:
-                result += self.tree[left_index]
+                result = self.operator(result, self.tree[left_index])
                 left_index += 1
 
             if right_index % 2 == 1:
-                result += self.tree[right_index]
+                result = self.operator(result, self.tree[right_index])
                 right_index -= 1
 
             left_index = (left_index - 1) // 2
