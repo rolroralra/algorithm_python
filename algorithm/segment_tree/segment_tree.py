@@ -47,8 +47,8 @@ class SegmentTree:
         index = self.base_index + target_index
         self.tree[index] = value
 
-        index = (index - 1) // 2
-        while index >= 0:
+        while index > self.BASE_INDEX:
+            index = (index - 1) // 2
             left_child_node = self.tree[index * 2 + 1]
             right_child_node = self.tree[index * 2 + 2]
 
@@ -59,7 +59,6 @@ class SegmentTree:
             elif right_child_node is not None:
                 self.tree[index] = right_child_node
 
-            index = (index - 1) // 2
 
 
     def query(self, start_index: int, end_index: int):
