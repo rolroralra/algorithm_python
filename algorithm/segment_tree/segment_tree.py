@@ -41,6 +41,25 @@ class SegmentTree:
             self.tree[node] = self.tree[right_node]
 
 
+    def __update_by_loop(self, target_index: int, value: int):
+        index = self.base_index + target_index
+        self.tree[index] = value
+
+        index = (index - 1) // 2
+        while index >= 0:
+            left_child_node = self.tree[index * 2 + 1]
+            right_child_node = self.tree[index * 2 + 2]
+
+            if left_child_node is not None and right_child_node is not None:
+                self.tree[index] = self.operator(left_child_node, right_child_node)
+            elif left_child_node is not None:
+                self.tree[index] = left_child_node
+            elif right_child_node is not None:
+                self.tree[index] = right_child_node
+
+            index = (index - 1) // 2
+
+
     def query(self, start_index: int, end_index: int):
         return self.__query_by_recursive(start_index, end_index, *self.ROOT_NODE)
 
@@ -67,3 +86,23 @@ class SegmentTree:
             return right_query_result
         else:
             return None
+
+    def __query_by_loop(self, start_index: int, end_index: int):
+        left_index = self.base_index + start_index
+        right_index = self.base_index + end_index
+
+        result = 0
+
+        while left_index <= right_index:
+            if left_index % 2 == 0:
+                result += self.tree[left_index]
+                left_index += 1
+
+            if right_index % 2 == 1:
+                result += self.tree[right_index]
+                right_index -= 1
+
+            left_index = (left_index - 1) // 2
+            right_index = (right_index - 1) // 2
+
+        return result
