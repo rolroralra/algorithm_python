@@ -1,10 +1,10 @@
-def articulation_points(adj_list: list[list[int]]) -> list[bool]:
+def articulation_points(adj_list: list[list[int]]) -> list[int]:
     vertex_count = len(adj_list)
     is_articulation_point = [False] * vertex_count
     visit = [0] * vertex_count
     visit_sequence = 1
 
-    def dfs(curr_index: int, is_root: bool = True) -> int:
+    def dfs(curr_index: int, is_root: bool = False) -> int:
         """
         Params:
             curr_index: current node index
@@ -13,7 +13,6 @@ def articulation_points(adj_list: list[list[int]]) -> list[bool]:
             if curr_index is not visited, minimum visit sequence of child nodes including current node itself
             else, visit sequence of current node
         """
-
         nonlocal adj_list
         nonlocal is_articulation_point
         nonlocal visit
@@ -31,22 +30,22 @@ def articulation_points(adj_list: list[list[int]]) -> list[bool]:
         for next_index in adj_list[curr_index]:
             if visit[next_index] == 0:
                 child_count += 1
-                min_visit_seq_from_child = dfs(next_index, False)
+                min_visit_seq_from_child = dfs(next_index)
 
-                if not is_root and visit[curr_index] <= min_visit_seq_from_child:
+                if not is_root and min_visit_seq_from_child >= visit[curr_index]:
                     is_articulation_point[curr_index] = True
             else:
                 min_visit_seq_from_child = visit[next_index]
 
             min_visit_sequence = min(min_visit_sequence, min_visit_seq_from_child)
 
-        if is_root:
-            is_articulation_point[curr_index] = child_count >= 2
+        if is_root and child_count >= 2:
+            is_articulation_point[curr_index] = True
 
         return min_visit_sequence
 
     for i in range(vertex_count):
         if visit[i] == 0:
-            dfs(i)
+            dfs(i, True)
 
-    return is_articulation_point
+    return [i for i, is_articulation in enumerate(is_articulation_point) if is_articulation]
