@@ -34,8 +34,8 @@ def topological_sort_by_dfs_recursive(adj_list: list[list[int]]):
 def topological_sort_by_indegree(adj_list: list[list[int]]):
     in_degree = [0] * len(adj_list)
 
-    for indicies in adj_list:
-        for index in indicies:
+    for indices in adj_list:
+        for index in indices:
             in_degree[index] += 1
 
     queue = deque()
