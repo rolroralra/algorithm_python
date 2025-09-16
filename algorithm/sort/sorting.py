@@ -1,3 +1,5 @@
+from algorithm.sort.heap import Heap
+
 class Sort:
     @staticmethod
     def selection_sort(array, comp=lambda a, b: a > b):
@@ -102,14 +104,16 @@ class Sort:
 
     @staticmethod
     def heap_sort(array, comp=lambda a, b: a > b):
-        return
+        Heap.heap_sort(array, comp)
 
     @staticmethod
     def counting_sort(array, comp=lambda a, b: a > b):
+        # TODO: implementation for counting sort
         return
 
     @staticmethod
     def radix_sort(array, comp=lambda a, b: a > b):
+        # TODO: implementation for radix sort
         return
 
     @staticmethod
@@ -145,5 +149,11 @@ if __name__ == '__main__':
     print(Sort.sort(original_list, algorithm=Sort.merge_sort))
 
     print(Sort.sort(original_list, algorithm=Sort.quick_sort))
+
+    print(Sort.sort(original_list, algorithm=Sort.heap_sort))
+
+    print(Sort.sort(original_list, algorithm=Sort.counting_sort))
+
+    print(Sort.sort(original_list, algorithm=Sort.radix_sort))
 
     print(original_list)
