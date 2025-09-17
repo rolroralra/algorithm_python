@@ -63,9 +63,9 @@ class Heap:
 
         while left_child_index < self.size():
             target_index = index
-            if left_child_index < self.size() and self.compare_function(self.array[target_index], self.array[left_child_index]):
+            if self.is_valid_index(left_child_index) and self.compare_function(self.array[target_index], self.array[left_child_index]):
                 target_index = left_child_index
-            if right_child_index < self.size() and self.compare_function(self.array[target_index], self.array[right_child_index]):
+            if self.is_valid_index(right_child_index) and self.compare_function(self.array[target_index], self.array[right_child_index]):
                 target_index = right_child_index
 
             if target_index == index:
@@ -79,9 +79,9 @@ class Heap:
         target_parent_index = index
         left_child_index, right_child_index = self.child_indices(index)
 
-        if left_child_index < self.size() and self.compare_function(self.array[target_parent_index], self.array[left_child_index]):
+        if self.is_valid_index(left_child_index) and self.compare_function(self.array[target_parent_index], self.array[left_child_index]):
             target_parent_index = left_child_index
-        if right_child_index < self.size() and self.compare_function(self.array[target_parent_index], self.array[right_child_index]):
+        if self.is_valid_index(right_child_index) and self.compare_function(self.array[target_parent_index], self.array[right_child_index]):
             target_parent_index = right_child_index
 
         if target_parent_index != index:

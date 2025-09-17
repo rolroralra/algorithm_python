@@ -1,4 +1,4 @@
-from algorithm.sort.heap import Heap
+from algorithm.heap.heap import Heap
 
 class Sort:
     @staticmethod
@@ -152,8 +152,8 @@ if __name__ == '__main__':
 
     print(Sort.sort(original_list, algorithm=Sort.heap_sort))
 
-    print(Sort.sort(original_list, algorithm=Sort.counting_sort))
+    # print(Sort.sort(original_list, algorithm=Sort.counting_sort))
 
-    print(Sort.sort(original_list, algorithm=Sort.radix_sort))
+    # print(Sort.sort(original_list, algorithm=Sort.radix_sort))
 
     print(original_list)
