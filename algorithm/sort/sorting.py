@@ -89,18 +89,26 @@ class Sort:
         if end_exclusive - start_inclusive <= 1:
             return
 
-        pivot_index = start_inclusive # can be modified in range (start_inclusive, end_inclusive)
+        final_pivot_index = cls.__partition_by_pivot_index(array, start_inclusive, end_exclusive, comp)
+        cls.__quick_sort(array, start_inclusive, final_pivot_index)
+        cls.__quick_sort(array, final_pivot_index + 1, end_exclusive)
+
+    @classmethod
+    def __partition_by_pivot_index(cls, array, start_inclusive, end_exclusive, comp=lambda a, b: a > b):
+        pivot_index = start_inclusive  # pivot index can be modified in range [start_inclusive, end_exclusive)
+        pivot = array[pivot_index]
+
         array[pivot_index], array[start_inclusive] = array[start_inclusive], array[pivot_index]
 
-        index = start_inclusive
+        index = pivot_index
         for i in range(start_inclusive + 1, end_exclusive):
-            if comp(array[start_inclusive], array[i]):
+            if comp(pivot, array[i]):
                 index += 1
                 array[index], array[i] = array[i], array[index]
 
-        array[pivot_index], array[index] = array[index], array[pivot_index]
-        cls.__quick_sort(array, start_inclusive, index)
-        cls.__quick_sort(array, index + 1, end_exclusive)
+        array[start_inclusive], array[index] = array[index], array[start_inclusive]
+
+        return index
 
     @staticmethod
     def heap_sort(array, comp=lambda a, b: a > b):

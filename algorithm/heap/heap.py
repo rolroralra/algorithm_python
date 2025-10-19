@@ -21,7 +21,7 @@ class Heap:
             return self.array.pop()
         max_val = self.array[0]
         self.array[0] = self.array.pop()
-        self._sift_down_recursive(0)
+        self._sift_down(0)
         return max_val
 
     def peek(self):
@@ -103,6 +103,9 @@ class Heap:
     def child_indices(self, index) -> tuple[int, int]:
         return self.left_child_index(index), self.right_child_index(index)
 
+    def print_heap(self):
+        print(self.array)
+
     def _compare_by_index(self, index1, index2):
         return (self.is_valid_index(index1) and self.is_valid_index(index2)
                 and self.compare_function(self.array[index1], self.array[index2]))
@@ -146,7 +149,9 @@ if __name__ == "__main__":
         print(heap.pop(), end=' ')
     print()
 
-    heap = Heap([11, 10, 5, 1, 15, 14, 3 ,8])
+    heap = Heap([-1, 4, 3, -10, 6, -5, 5, 2], compare_function=lambda a, b: a < b)
+    heap.print_heap()
+
     while not heap.is_empty():
         print(heap.pop(), end=' ')
     print()

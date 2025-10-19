@@ -71,23 +71,23 @@ def mst_prim_algorithm(adj_list: list[list[tuple[int, int]]]) -> tuple[int, list
 
     priority_queue.put((0, 0, -1))
     while not priority_queue.empty():
-        length, curr_index, prev_index = priority_queue.get()
+        curr_edge_length, curr_index, prev_index = priority_queue.get()
 
         if is_visited[curr_index]:
             continue
 
         is_visited[curr_index] = True
         if prev_index != -1:
-            mst_length += length
-            selected_edge_list.append((prev_index, curr_index, length))
+            mst_length += curr_edge_length
+            selected_edge_list.append((prev_index, curr_index, curr_edge_length))
 
         if len(selected_edge_list) == vertex_count - 1:
             break
 
-        for next_index, length in adj_list[curr_index]:
+        for next_index, next_edge_length in adj_list[curr_index]:
             if is_visited[next_index]:
                 continue
 
-            priority_queue.put((length, next_index, curr_index))
+            priority_queue.put((next_edge_length, next_index, curr_index))
 
     return mst_length, selected_edge_list
