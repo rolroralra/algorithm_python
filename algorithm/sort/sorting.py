@@ -129,6 +129,9 @@ class Sort:
 
     @staticmethod
     def counting_sort(array):
+        if len(array) <= 1:
+            return array
+
         min_val = min(array)
         max_val = max(array)
         value_size = max_val - min_val + 1
@@ -156,10 +159,49 @@ class Sort:
         array[:] = sorted_array
         return array
 
+    @classmethod
+    def radix_sort(cls, array, base=10):
+        if len(array) <= 1:
+            return array
+
+        if base < 2:
+            raise ValueError("base must be at least 2.")
+
+        min_val = min(array)
+        max_val = max(array)
+        max_shifted_value = max_val - min_val
+
+        # Repeatedly sort by each digit, from least to most significant
+        # The place_value variable represents the current digit's place (1 for units, 10 for tens, 100 for hundreds, etc.)
+        place_value = 1
+        while max_shifted_value // place_value > 0:
+            cls.__counting_sort_by_digit(array, min_val, base, place_value)
+            place_value *= base
+
+        return array
+
     @staticmethod
-    def radix_sort(array):
-        # TODO: implementation for radix sort
-        return
+    def __counting_sort_by_digit(array, min_val, base=10, place_value=1):
+        size = len(array)
+        count = [0] * base
+        output = [None] * size
+
+        # Count the occurrences of each digit (in the given base) at the current place value
+        for value in array:
+            digit = ((value - min_val) // place_value) % base
+            count[digit] += 1
+
+        # Cumulative count to determine the position of each element in the output array
+        for i in range(1, base):
+            count[i] += count[i - 1]
+
+        # To maintain stability, we iterate through the array in reverse order
+        for i in range(size - 1, -1, -1):
+            digit = ((array[i] - min_val) // place_value) % base
+            count[digit] -= 1
+            output[count[digit]] = array[i]
+
+        array[:] = output
 
     @staticmethod
     def bucket_sort(array):
@@ -214,6 +256,6 @@ if __name__ == '__main__':
 
     print(f"counting sort  : {Sort.sort(original_list, algorithm=Sort.counting_sort)}")
 
-    # print(Sort.sort(original_list, algorithm=Sort.radix_sort))
+    print(f"radix sort     : {Sort.sort(original_list, algorithm=Sort.radix_sort)}")
 
     print(f"original array : {original_list}")
