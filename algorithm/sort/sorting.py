@@ -175,6 +175,7 @@ class Sort:
         # The place_value variable represents the current digit's place (1 for units, 10 for tens, 100 for hundreds, etc.)
         place_value = 1
         while max_shifted_value // place_value > 0:
+            # Sort the array based on the current digit using counting sort (which is stable)
             cls.__counting_sort_by_digit(array, min_val, base, place_value)
             place_value *= base
 
@@ -203,10 +204,41 @@ class Sort:
 
         array[:] = output
 
-    @staticmethod
-    def bucket_sort(array):
-        # TODO: implementation for bucket sort
-        return
+    @classmethod
+    def bucket_sort(cls, array, bucket_count=None):
+        if len(array) <= 1:
+            return array
+
+        min_val = min(array)
+        max_val = max(array)
+
+        # All elements are equal, so the array is already sorted
+        if min_val == max_val:
+            return array
+
+        if bucket_count is None:
+            bucket_count = len(array)
+
+        if bucket_count < 1:
+            raise ValueError("bucket_count must be at least 1.")
+
+        buckets = [[] for _ in range(bucket_count)]
+
+        # Distribute elements into buckets based on their relative position within the value range
+        for value in array:
+            index = int((value - min_val) / (max_val - min_val) * bucket_count)
+            if index == bucket_count:
+                index -= 1
+            buckets[index].append(value)
+
+        # Sort each bucket individually (insertion sort suits the small bucket sizes), then concatenate
+        sorted_array = []
+        for bucket in buckets:
+            cls.insertion_sort(bucket)
+            sorted_array.extend(bucket)
+
+        array[:] = sorted_array
+        return array
 
     @staticmethod
     def sort(array=None, comp=lambda a, b: a > b, algorithm=lambda arr, comp: Sort.quick_sort(arr, comp)):
@@ -257,5 +289,7 @@ if __name__ == '__main__':
     print(f"counting sort  : {Sort.sort(original_list, algorithm=Sort.counting_sort)}")
 
     print(f"radix sort     : {Sort.sort(original_list, algorithm=Sort.radix_sort)}")
+
+    print(f"bucket sort    : {Sort.sort(original_list, algorithm=Sort.bucket_sort)}")
 
     print(f"original array : {original_list}")
