@@ -1,3 +1,4 @@
+import inspect
 import secrets
 
 from algorithm.heap.heap import Heap
@@ -240,8 +241,22 @@ class Sort:
         array[:] = sorted_array
         return array
 
+    @classmethod
+    def sort(cls, array=None, comp=lambda a, b: a > b,
+        algorithm=lambda arr, comp: Sort.quick_sort(arr, comp)):
+        if array is None:
+            return []
+
+        params = list(inspect.signature(algorithm).parameters)
+
+        # If the algorithm's second parameter is named "comp", it expects a comparator
+        if len(params) >= 2 and params[1] == 'comp':
+            return cls.__sort_with_comparison(array, comp, algorithm)
+
+        return cls.__sort_without_comparison(array, algorithm)
+
     @staticmethod
-    def sort(array=None, comp=lambda a, b: a > b, algorithm=lambda arr, comp: Sort.quick_sort(arr, comp)):
+    def __sort_with_comparison(array=None, comp=lambda a, b: a > b, algorithm=lambda arr, comp: Sort.quick_sort(arr, comp)):
         if array is None:
             return []
 
@@ -250,7 +265,7 @@ class Sort:
         return cloned_array
 
     @staticmethod
-    def sort(array=None, algorithm=lambda arr: Sort.counting_sort(arr)):
+    def __sort_without_comparison(array=None, algorithm=lambda arr: Sort.counting_sort(arr)):
         if array is None:
             return []
 
