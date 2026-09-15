@@ -270,9 +270,8 @@ class Sort:
 import random
 
 if __name__ == '__main__':
-    array_size = 15
-    original_list = [i + 1 for i in range(array_size)]
-    random.shuffle(original_list)
+    array_size = 10
+    original_list = [secrets.randbelow(30) + 1 for _ in range(array_size)]
 
     print(f"bubble sort    : {Sort.sort(original_list, algorithm=Sort.bubble_sort)}")
 
