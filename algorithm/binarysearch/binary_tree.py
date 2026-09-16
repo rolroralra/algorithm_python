@@ -35,8 +35,8 @@ class BinaryTree(Generic[T]):
         self._print_tree(self.root, '', True)
 
     def _inorder(self, node: BinaryTreeNode[T] | None,
-        action: Callable[[T], None] | None = lambda x: print(x, end=' ')):
-        if node is None or action is None:
+        action: Callable[[T], None] = lambda x: print(x, end=' ')):
+        if node is None:
             return
 
         self._inorder(node.left, action)
@@ -44,8 +44,8 @@ class BinaryTree(Generic[T]):
         self._inorder(node.right, action)
 
     def _preorder(self, node: BinaryTreeNode[T] | None,
-        action: Callable[[T], None] | None = lambda x: print(x, end=' ')):
-        if node is None or action is None:
+        action: Callable[[T], None] = lambda x: print(x, end=' ')):
+        if node is None:
             return
 
         action(node)
@@ -53,8 +53,8 @@ class BinaryTree(Generic[T]):
         self._preorder(node.right, action)
 
     def _postorder(self, node: BinaryTreeNode[T] | None,
-        action: Callable[[T], None] | None = lambda x: print(x, end=' ')):
-        if node is None or action is None:
+        action: Callable[[T], None] = lambda x: print(x, end=' ')):
+        if node is None:
             return
 
         self._postorder(node.left, action)

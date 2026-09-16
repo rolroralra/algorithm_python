@@ -31,6 +31,9 @@ class BinarySearchTree(BinaryTree[T], Generic[T]):
     def delete(self, value: T):
         self.root = self._delete(self.root, value)
 
+    def search(self, value: T) -> BSTNode[T] | None:
+        return self._find(self.root, value)
+
     def contains(self, value: T) -> bool:
         return self._find(self.root, value) is not None
 
@@ -43,10 +46,7 @@ class BinarySearchTree(BinaryTree[T], Generic[T]):
         if self.root is None:
             return None
 
-        node = self.root
-        while node.right is not None:
-            node = node.right
-        return node.value
+        return self._find_max_node(self.root).value
 
     def size(self) -> int:
         return self._size
@@ -55,6 +55,12 @@ class BinarySearchTree(BinaryTree[T], Generic[T]):
         return self._size == 0
 
     def _insert(self, node: BSTNode[T] | None, value: T) -> BSTNode[T]:
+        if self.size() < 1000:
+            return self._insert_by_recursive(node, value)
+
+        return self._insert_by_loop(node, value)
+
+    def _insert_by_recursive(self, node: BSTNode[T] | None, value: T) -> BSTNode[T]:
         if node is None:
             self._size += 1
             return BSTNode(value)
@@ -67,7 +73,37 @@ class BinarySearchTree(BinaryTree[T], Generic[T]):
 
         return node
 
+    # TODO: parent pointer를 사용하여 구현
+    def _insert_by_loop(self, node: BSTNode[T] | None, value: T) -> BSTNode[T]:
+        if node is None:
+            self._size += 1
+            return BSTNode(value)
+
+        current = node
+        while True:
+            comparison = self.comp(value, current.value)
+            if comparison < 0:
+                if current.left is None:
+                    current.left = BSTNode(value)
+                    self._size += 1
+                    return node
+                current = current.left
+            elif comparison > 0:
+                if current.right is None:
+                    current.right = BSTNode(value)
+                    self._size += 1
+                    return node
+                current = current.right
+            else:
+                return node
+
     def _delete(self, node: BSTNode[T] | None, value: T) -> BSTNode[T] | None:
+        if self.size() < 1000:
+            return self._delete_by_recursive(node, value)
+
+        return self._delete_by_loop(node, value)
+
+    def _delete_by_recursive(self, node: BSTNode[T] | None, value: T) -> BSTNode[T] | None:
         if node is None:
             return None
 
@@ -90,6 +126,55 @@ class BinarySearchTree(BinaryTree[T], Generic[T]):
 
         return node
 
+    # TODO: parent pointer를 사용하여 구현
+    def _delete_by_loop(self, node: BSTNode[T] | None, value: T) -> BSTNode[T] | None:
+        parent = None
+        current = node
+
+        while current is not None:
+            comparison = self.comp(value, current.value)
+            if comparison < 0:
+                parent = current
+                current = current.left
+            elif comparison > 0:
+                parent = current
+                current = current.right
+            else:
+                break
+
+        if current is None:
+            return node
+
+        self._size -= 1
+
+        if current.left is not None and current.right is not None:
+            successor_parent = current
+            successor = current.right
+            while successor.left is not None:
+                successor_parent = successor
+                successor = successor.left
+
+            current.value = successor.value
+
+            if successor_parent.left is successor:
+                successor_parent.left = successor.right
+            else:
+                successor_parent.right = successor.right
+
+            return node
+
+        child = current.left if current.left is not None else current.right
+
+        if parent is None:
+            return child
+
+        if parent.left is current:
+            parent.left = child
+        else:
+            parent.right = child
+
+        return node
+
     def _delete_min(self, node: BSTNode[T]) -> BSTNode[T] | None:
         if node.left is None:
             return node.right
@@ -98,14 +183,35 @@ class BinarySearchTree(BinaryTree[T], Generic[T]):
         return node
 
     def _find(self, node: BSTNode[T] | None, value: T) -> BSTNode[T] | None:
+        if self.size() < 1000:
+            return self._find_by_recursive(node, value)
+
+        return self._find_by_loop(node, value)
+
+    def _find_by_loop(self, node: BSTNode[T] | None, value: T) -> BSTNode[T] | None:
+        if node is None:
+            return None
+
+        while node is not None:
+            comparison = self.comp(value, node.value)
+            if comparison < 0:
+                node = node.left
+            elif comparison > 0:
+                node = node.right
+            else:
+                return node
+
+        return None
+
+    def _find_by_recursive(self, node: BSTNode[T] | None, value: T) -> BSTNode[T] | None:
         if node is None:
             return None
 
         comparison = self.comp(value, node.value)
         if comparison < 0:
-            return self._find(node.left, value)
+            return self._find_by_recursive(node.left, value)
         elif comparison > 0:
-            return self._find(node.right, value)
+            return self._find_by_recursive(node.right, value)
         return node
 
     @staticmethod
@@ -113,6 +219,22 @@ class BinarySearchTree(BinaryTree[T], Generic[T]):
         while node.left is not None:
             node = node.left
         return node
+
+    @staticmethod
+    def _find_max_node(node: BSTNode[T]) -> BSTNode[T]:
+        while node.right is not None:
+            node = node.right
+        return node
+
+    @staticmethod
+    def _successor(node: BSTNode[T]) -> BSTNode[T] | None:
+        # TODO: implementation by using parent pointer
+        raise NotImplementedError
+
+    @staticmethod
+    def _predecessor(node: BSTNode[T]) -> BSTNode[T] | None:
+        # TODO: implementation by using parent pointer
+        raise NotImplementedError
 
 
 if __name__ == "__main__":
