@@ -1,4 +1,4 @@
-from typing import Generic, Protocol, TypeVar
+from typing import Generic, Protocol, TypeVar, Callable
 
 T = TypeVar('T')
 
@@ -15,17 +15,17 @@ class BinaryTree(Generic[T]):
 
     def inorder(self) -> list[T]:
         result: list[T] = []
-        self._inorder(self.root, result)
+        self._inorder(self.root, lambda node: result.append(node.value))
         return result
 
     def preorder(self) -> list[T]:
         result: list[T] = []
-        self._preorder(self.root, result)
+        self._preorder(self.root, lambda node: result.append(node.value))
         return result
 
     def postorder(self) -> list[T]:
         result: list[T] = []
-        self._postorder(self.root, result)
+        self._postorder(self.root, lambda node: result.append(node.value))
         return result
 
     def height(self) -> int:
@@ -34,29 +34,32 @@ class BinaryTree(Generic[T]):
     def print_tree(self):
         self._print_tree(self.root, '', True)
 
-    def _inorder(self, node: BinaryTreeNode[T] | None, result: list[T]):
-        if node is None:
+    def _inorder(self, node: BinaryTreeNode[T] | None,
+        action: Callable[[T], None] | None = lambda x: print(x, end=' ')):
+        if node is None or action is None:
             return
 
-        self._inorder(node.left, result)
-        result.append(node.value)
-        self._inorder(node.right, result)
+        self._inorder(node.left, action)
+        action(node)
+        self._inorder(node.right, action)
 
-    def _preorder(self, node: BinaryTreeNode[T] | None, result: list[T]):
-        if node is None:
+    def _preorder(self, node: BinaryTreeNode[T] | None,
+        action: Callable[[T], None] | None = lambda x: print(x, end=' ')):
+        if node is None or action is None:
             return
 
-        result.append(node.value)
-        self._preorder(node.left, result)
-        self._preorder(node.right, result)
+        action(node)
+        self._preorder(node.left, action)
+        self._preorder(node.right, action)
 
-    def _postorder(self, node: BinaryTreeNode[T] | None, result: list[T]):
-        if node is None:
+    def _postorder(self, node: BinaryTreeNode[T] | None,
+        action: Callable[[T], None] | None = lambda x: print(x, end=' ')):
+        if node is None or action is None:
             return
 
-        self._postorder(node.left, result)
-        self._postorder(node.right, result)
-        result.append(node.value)
+        self._postorder(node.left, action)
+        self._postorder(node.right, action)
+        action(node)
 
     def _height(self, node: BinaryTreeNode[T] | None) -> int:
         if node is None:
@@ -75,3 +78,24 @@ class BinaryTree(Generic[T]):
 
         if node.left is not None:
             self._print_tree(node.left, prefix + ('    ' if is_tail else '│   '), True)
+
+if __name__ == '__main__':
+    class Node:
+        def __init__(self, value):
+            self.value = value
+            self.left = None
+            self.right = None
+
+    root = Node(1)
+    root.left = Node(2)
+    root.right = Node(3)
+    root.left.left = Node(4)
+    root.left.right = Node(5)
+
+    tree = BinaryTree(root)
+    print("Inorder traversal:", tree.inorder())
+    print("Preorder traversal:", tree.preorder())
+    print("Postorder traversal:", tree.postorder())
+    print("Height of the tree:", tree.height())
+    print("Tree structure:")
+    tree.print_tree()
