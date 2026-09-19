@@ -7,6 +7,7 @@ class BinaryTreeNode(Protocol[T]):
     value: T
     left: 'BinaryTreeNode[T] | None'
     right: 'BinaryTreeNode[T] | None'
+    parent: 'BinaryTreeNode[T] | None'
 
 
 class BinaryTree(Generic[T]):
@@ -85,6 +86,7 @@ if __name__ == '__main__':
             self.value = value
             self.left = None
             self.right = None
+            self.parent = None
 
     root = Node(1)
     root.left = Node(2)

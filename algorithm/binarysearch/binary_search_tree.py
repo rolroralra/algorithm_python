@@ -13,6 +13,7 @@ class BSTNode(Generic[T]):
         self.value = value
         self.left: BSTNode[T] | None = None
         self.right: BSTNode[T] | None = None
+        self.parent: BSTNode[T] | None = None
 
 
 class BinarySearchTree(BinaryTree[T], Generic[T]):
@@ -23,12 +24,12 @@ class BinarySearchTree(BinaryTree[T], Generic[T]):
 
         if input_array:
             for value in input_array:
-                self.insert(value)
+                self.add(value)
 
-    def insert(self, value: T):
+    def add(self, value: T):
         self.root = self._insert(self.root, value)
 
-    def delete(self, value: T):
+    def remove(self, value: T):
         self.root = self._delete(self.root, value)
 
     def search(self, value: T) -> BSTNode[T] | None:
@@ -68,12 +69,13 @@ class BinarySearchTree(BinaryTree[T], Generic[T]):
         comparison = self.comp(value, node.value)
         if comparison < 0:
             node.left = self._insert(node.left, value)
+            node.left.parent = node
         elif comparison > 0:
             node.right = self._insert(node.right, value)
+            node.right.parent = node
 
         return node
 
-    # TODO: parent pointer를 사용하여 구현
     def _insert_by_loop(self, node: BSTNode[T] | None, value: T) -> BSTNode[T]:
         if node is None:
             self._size += 1
@@ -85,12 +87,14 @@ class BinarySearchTree(BinaryTree[T], Generic[T]):
             if comparison < 0:
                 if current.left is None:
                     current.left = BSTNode(value)
+                    current.left.parent = current
                     self._size += 1
                     return node
                 current = current.left
             elif comparison > 0:
                 if current.right is None:
                     current.right = BSTNode(value)
+                    current.right.parent = current
                     self._size += 1
                     return node
                 current = current.right
@@ -110,34 +114,39 @@ class BinarySearchTree(BinaryTree[T], Generic[T]):
         comparison = self.comp(value, node.value)
         if comparison < 0:
             node.left = self._delete(node.left, value)
+            if node.left is not None:
+                node.left.parent = node
         elif comparison > 0:
             node.right = self._delete(node.right, value)
+            if node.right is not None:
+                node.right.parent = node
         else:
             self._size -= 1
 
             if node.left is None:
+                if node.right is not None:
+                    node.right.parent = node.parent
                 return node.right
             if node.right is None:
+                node.left.parent = node.parent
                 return node.left
 
             successor = self._find_min_node(node.right)
             node.value = successor.value
             node.right = self._delete_min(node.right)
+            if node.right is not None:
+                node.right.parent = node
 
         return node
 
-    # TODO: parent pointer를 사용하여 구현
     def _delete_by_loop(self, node: BSTNode[T] | None, value: T) -> BSTNode[T] | None:
-        parent = None
         current = node
 
         while current is not None:
             comparison = self.comp(value, current.value)
             if comparison < 0:
-                parent = current
                 current = current.left
             elif comparison > 0:
-                parent = current
                 current = current.right
             else:
                 break
@@ -148,12 +157,11 @@ class BinarySearchTree(BinaryTree[T], Generic[T]):
         self._size -= 1
 
         if current.left is not None and current.right is not None:
-            successor_parent = current
             successor = current.right
             while successor.left is not None:
-                successor_parent = successor
                 successor = successor.left
 
+            successor_parent = successor.parent
             current.value = successor.value
 
             if successor_parent.left is successor:
@@ -161,9 +169,16 @@ class BinarySearchTree(BinaryTree[T], Generic[T]):
             else:
                 successor_parent.right = successor.right
 
+            if successor.right is not None:
+                successor.right.parent = successor_parent
+
             return node
 
         child = current.left if current.left is not None else current.right
+        parent = current.parent
+
+        if child is not None:
+            child.parent = parent
 
         if parent is None:
             return child
@@ -180,6 +195,8 @@ class BinarySearchTree(BinaryTree[T], Generic[T]):
             return node.right
 
         node.left = self._delete_min(node.left)
+        if node.left is not None:
+            node.left.parent = node
         return node
 
     def _find(self, node: BSTNode[T] | None, value: T) -> BSTNode[T] | None:
@@ -226,15 +243,27 @@ class BinarySearchTree(BinaryTree[T], Generic[T]):
             node = node.right
         return node
 
-    @staticmethod
-    def _successor(node: BSTNode[T]) -> BSTNode[T] | None:
-        # TODO: implementation by using parent pointer
-        raise NotImplementedError
+    @classmethod
+    def _successor(cls, node: BSTNode[T]) -> BSTNode[T] | None:
+        if node.right is not None:
+            return cls._find_min_node(node.right)
 
-    @staticmethod
-    def _predecessor(node: BSTNode[T]) -> BSTNode[T] | None:
-        # TODO: implementation by using parent pointer
-        raise NotImplementedError
+        current, parent = node, node.parent
+        while parent is not None and current is parent.right:
+            current, parent = parent, parent.parent
+
+        return parent
+
+    @classmethod
+    def _predecessor(cls, node: BSTNode[T]) -> BSTNode[T] | None:
+        if node.left is not None:
+            return cls._find_max_node(node.left)
+
+        current, parent = node, node.parent
+        while parent is not None and current is parent.left:
+            current, parent = parent, parent.parent
+
+        return parent
 
 
 if __name__ == "__main__":
@@ -243,12 +272,12 @@ if __name__ == "__main__":
     print(bst.inorder())
     print(bst.size())
 
-    bst.insert(10)
-    bst.insert(0)
+    bst.add(10)
+    bst.add(0)
     print(bst.inorder())
 
-    bst.delete(3)
-    bst.delete(9)
+    bst.remove(3)
+    bst.remove(9)
     print(bst.inorder())
     print(bst.size())
 
@@ -268,7 +297,7 @@ if __name__ == "__main__":
     people_bst.print_tree()
     print(people_bst.inorder())
 
-    people_bst.delete(Person('', 30))
+    people_bst.remove(Person('', 30))
     print(people_bst.inorder())
 
     # BST worst case: inserting an already-sorted array in order.
