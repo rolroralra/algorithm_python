@@ -41,13 +41,13 @@ class BinarySearchTree(BinaryTree[T], Generic[T]):
     def find_min(self) -> T | None:
         if self.root is None:
             return None
-        return self._find_min_node(self.root).value
+        return self.find_min_node(self.root).value
 
     def find_max(self) -> T | None:
         if self.root is None:
             return None
 
-        return self._find_max_node(self.root).value
+        return self.find_max_node(self.root).value
 
     def size(self) -> int:
         return self._size
@@ -131,7 +131,7 @@ class BinarySearchTree(BinaryTree[T], Generic[T]):
                 node.left.parent = node.parent
                 return node.left
 
-            successor = self._find_min_node(node.right)
+            successor = self.find_min_node(node.right)
             node.value = successor.value
             node.right = self._delete_min(node.right)
             if node.right is not None:
@@ -232,22 +232,23 @@ class BinarySearchTree(BinaryTree[T], Generic[T]):
         return node
 
     @staticmethod
-    def _find_min_node(node: BSTNode[T]) -> BSTNode[T]:
+    def find_min_node(node: BSTNode[T]) -> BSTNode[T]:
         while node.left is not None:
             node = node.left
         return node
 
     @staticmethod
-    def _find_max_node(node: BSTNode[T]) -> BSTNode[T]:
+    def find_max_node(node: BSTNode[T]) -> BSTNode[T]:
         while node.right is not None:
             node = node.right
         return node
 
     @classmethod
-    def _successor(cls, node: BSTNode[T]) -> BSTNode[T] | None:
+    def successor(cls, node: BSTNode[T]) -> BSTNode[T] | None:
         if node.right is not None:
-            return cls._find_min_node(node.right)
+            return cls.find_min_node(node.right)
 
+        # If the node has no right child, the successor is one of its ancestors.
         current, parent = node, node.parent
         while parent is not None and current is parent.right:
             current, parent = parent, parent.parent
@@ -255,10 +256,11 @@ class BinarySearchTree(BinaryTree[T], Generic[T]):
         return parent
 
     @classmethod
-    def _predecessor(cls, node: BSTNode[T]) -> BSTNode[T] | None:
+    def predecessor(cls, node: BSTNode[T]) -> BSTNode[T] | None:
         if node.left is not None:
-            return cls._find_max_node(node.left)
+            return cls.find_max_node(node.left)
 
+        # If the node has no left child, the predecessor is one of its ancestors.
         current, parent = node, node.parent
         while parent is not None and current is parent.left:
             current, parent = parent, parent.parent

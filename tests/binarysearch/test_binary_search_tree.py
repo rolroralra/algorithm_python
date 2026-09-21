@@ -114,7 +114,7 @@ class TestSuccessorPredecessor:
         bst = bst_factory([5, 3, 8, 6, 9])
         node = bst.search(5)
 
-        successor = bst._successor(node)
+        successor = bst.successor(node)
 
         assert successor.value == 6
 
@@ -122,7 +122,7 @@ class TestSuccessorPredecessor:
         bst = bst_factory([5, 3, 8, 2, 4])
         node = bst.search(5)
 
-        predecessor = bst._predecessor(node)
+        predecessor = bst.predecessor(node)
 
         assert predecessor.value == 4
 
@@ -130,7 +130,7 @@ class TestSuccessorPredecessor:
         bst = bst_factory([5, 3, 8, 2, 4])
         node = bst.search(4)
 
-        successor = bst._successor(node)
+        successor = bst.successor(node)
 
         assert successor.value == 5
 
@@ -138,7 +138,7 @@ class TestSuccessorPredecessor:
         bst = bst_factory([5, 3, 8, 6, 9])
         node = bst.search(6)
 
-        predecessor = bst._predecessor(node)
+        predecessor = bst.predecessor(node)
 
         assert predecessor.value == 5
 
@@ -146,20 +146,20 @@ class TestSuccessorPredecessor:
         bst = bst_factory([5, 3, 8, 2, 4, 6, 9])
         node = bst.search(bst.find_max())
 
-        assert bst._successor(node) is None
+        assert bst.successor(node) is None
 
     def test_predecessor_of_minimum_is_none(self, bst_factory):
         bst = bst_factory([5, 3, 8, 2, 4, 6, 9])
         node = bst.search(bst.find_min())
 
-        assert bst._predecessor(node) is None
+        assert bst.predecessor(node) is None
 
     def test_single_node_has_no_successor_or_predecessor(self, bst_factory):
         bst = bst_factory([42])
         node = bst.search(42)
 
-        assert bst._successor(node) is None
-        assert bst._predecessor(node) is None
+        assert bst.successor(node) is None
+        assert bst.predecessor(node) is None
 
     @pytest.mark.parametrize("seed", range(10))
     def test_successor_and_predecessor_match_sorted_order(self, bst_factory, seed):
@@ -170,8 +170,8 @@ class TestSuccessorPredecessor:
 
         for index, value in enumerate(sorted_values):
             node = bst.search(value)
-            successor = bst._successor(node)
-            predecessor = bst._predecessor(node)
+            successor = bst.successor(node)
+            predecessor = bst.predecessor(node)
 
             expected_successor = sorted_values[index + 1] if index + 1 < len(sorted_values) else None
             expected_predecessor = sorted_values[index - 1] if index > 0 else None
