@@ -8,15 +8,18 @@ IN_PLACE_ALGORITHMS = {
     "selection_sort": Sort.selection_sort,
     "bubble_sort": Sort.bubble_sort,
     "insertion_sort": Sort.insertion_sort,
+    "shell_sort": Sort.shell_sort,
     "merge_sort": Sort.merge_sort,
     "quick_sort": Sort.quick_sort,
     "heap_sort": Sort.heap_sort,
+    # bucket_sort distributes by value magnitude, but sorts each bucket with
+    # insertion_sort, so it is comparison-based just like the others here.
+    "bucket_sort": Sort.bucket_sort,
 }
 
 NON_COMPARISON_ALGORITHMS = {
     "counting_sort": Sort.counting_sort,
     "radix_sort": Sort.radix_sort,
-    "bucket_sort": Sort.bucket_sort,
 }
 
 

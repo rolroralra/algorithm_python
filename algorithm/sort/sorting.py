@@ -42,6 +42,21 @@ class Sort:
 
                 array[j - 1], array[j] = array[j], array[j - 1]
 
+    @staticmethod
+    def shell_sort(array, comp=lambda a, b: a > b):
+        size = len(array)
+        gap = size // 2
+        while gap > 0:
+            for i in range(gap, size):
+                for j in range(i, gap - 1, -gap):
+                    # If the current element is not less than the element `gap` positions before it, this pass is done for this sub-list
+                    if not comp(array[j - gap], array[j]):
+                        break
+
+                    array[j - gap], array[j] = array[j], array[j - gap]
+
+            gap //= 2
+
     @classmethod
     def merge_sort(cls, array, comp=lambda a, b: a > b):
         cls.__merge_sort(array, 0, len(array), comp)
@@ -206,7 +221,7 @@ class Sort:
         array[:] = output
 
     @classmethod
-    def bucket_sort(cls, array, bucket_count=None):
+    def bucket_sort(cls, array, comp=lambda a, b: a > b, bucket_count=None):
         if len(array) <= 1:
             return array
 
@@ -232,11 +247,15 @@ class Sort:
                 index -= 1
             buckets[index].append(value)
 
+        # Buckets partition the value range in ascending order; walk them in whichever
+        # direction comp calls for so the between-bucket order matches the within-bucket order.
+        bucket_indices = range(bucket_count) if not comp(min_val, max_val) else range(bucket_count - 1, -1, -1)
+
         # Sort each bucket individually (insertion sort suits the small bucket sizes), then concatenate
         sorted_array = []
-        for bucket in buckets:
-            cls.insertion_sort(bucket)
-            sorted_array.extend(bucket)
+        for index in bucket_indices:
+            cls.insertion_sort(buckets[index], comp)
+            sorted_array.extend(buckets[index])
 
         array[:] = sorted_array
         return array
@@ -293,6 +312,8 @@ if __name__ == '__main__':
     print(f"selection sort : {Sort.sort(original_list, algorithm=Sort.selection_sort)}")
 
     print(f"insertion sort : {Sort.sort(original_list, algorithm=Sort.insertion_sort)}")
+
+    print(f"shell sort     : {Sort.sort(original_list, algorithm=Sort.shell_sort)}")
 
     print(f"merge sort     : {Sort.sort(original_list, algorithm=Sort.merge_sort)}")
 
