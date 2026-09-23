@@ -1,18 +1,19 @@
 import random
 from typing import Callable, Generic, TypeVar
 
-from algorithm.binarysearch.binary_tree import BinaryTree
+from algorithm.binarysearch.binary_tree import BinaryTree, BinaryTreeNode
 
 T = TypeVar('T')
 
 DEFAULT_COMPARATOR: Callable[[T, T], int] = lambda a, b: (a > b) - (a < b)
 
 
-class BSTNode(Generic[T]):
+class BSTNode(BinaryTreeNode[T], Generic[T]):
+    left: 'BSTNode[T] | None'
+    right: 'BSTNode[T] | None'
+
     def __init__(self, value: T):
-        self.value = value
-        self.left: BSTNode[T] | None = None
-        self.right: BSTNode[T] | None = None
+        super().__init__(value)
         self.parent: BSTNode[T] | None = None
 
     def is_leaf(self) -> bool:

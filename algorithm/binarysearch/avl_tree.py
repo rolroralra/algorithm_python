@@ -1,17 +1,18 @@
 from typing import Callable, Generic, TypeVar
 
-from algorithm.binarysearch.binary_tree import BinaryTree
+from algorithm.binarysearch.binary_tree import BinaryTree, BinaryTreeNode
 
 T = TypeVar('T')
 
 DEFAULT_COMPARATOR: Callable[[T, T], int] = lambda a, b: (a > b) - (a < b)
 
 
-class AVLNode(Generic[T]):
+class AVLNode(BinaryTreeNode[T], Generic[T]):
+    left: 'AVLNode[T] | None'
+    right: 'AVLNode[T] | None'
+
     def __init__(self, value: T):
-        self.value = value
-        self.left: AVLNode[T] | None = None
-        self.right: AVLNode[T] | None = None
+        super().__init__(value)
         self.height = 1
 
 

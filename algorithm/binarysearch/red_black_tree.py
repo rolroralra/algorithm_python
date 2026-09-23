@@ -1,6 +1,6 @@
 from typing import Callable, Generic, TypeVar
 
-from algorithm.binarysearch.binary_tree import BinaryTree
+from algorithm.binarysearch.binary_tree import BinaryTree, BinaryTreeNode
 
 T = TypeVar('T')
 
@@ -10,11 +10,12 @@ RED = True
 BLACK = False
 
 
-class RBNode(Generic[T]):
+class RBNode(BinaryTreeNode[T], Generic[T]):
+    left: 'RBNode[T] | None'
+    right: 'RBNode[T] | None'
+
     def __init__(self, value: T, color: bool = RED):
-        self.value = value
-        self.left: RBNode[T] | None = None
-        self.right: RBNode[T] | None = None
+        super().__init__(value)
         self.color = color
 
 

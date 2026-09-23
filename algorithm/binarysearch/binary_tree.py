@@ -1,13 +1,18 @@
-from typing import Generic, Protocol, TypeVar, Callable
+from typing import Generic, TypeVar, Callable
 
 T = TypeVar('T')
 
 
-class BinaryTreeNode(Protocol[T]):
-    value: T
-    left: 'BinaryTreeNode[T] | None'
-    right: 'BinaryTreeNode[T] | None'
-    parent: 'BinaryTreeNode[T] | None'
+class BinaryTreeNode(Generic[T]):
+    """
+    value/left/right만 갖는 얕은 공통 노드 베이스.
+    parent(BST), height(AVL), color(Red-Black) 같은 트리별 확장은 각 서브클래스가 추가한다.
+    """
+
+    def __init__(self, value: T):
+        self.value = value
+        self.left: 'BinaryTreeNode[T] | None' = None
+        self.right: 'BinaryTreeNode[T] | None' = None
 
 
 class BinaryTree(Generic[T]):
@@ -81,18 +86,11 @@ class BinaryTree(Generic[T]):
             self._print_tree(node.left, prefix + ('    ' if is_tail else '│   '), True)
 
 if __name__ == '__main__':
-    class Node:
-        def __init__(self, value):
-            self.value = value
-            self.left = None
-            self.right = None
-            self.parent = None
-
-    root = Node(1)
-    root.left = Node(2)
-    root.right = Node(3)
-    root.left.left = Node(4)
-    root.left.right = Node(5)
+    root = BinaryTreeNode(1)
+    root.left = BinaryTreeNode(2)
+    root.right = BinaryTreeNode(3)
+    root.left.left = BinaryTreeNode(4)
+    root.left.right = BinaryTreeNode(5)
 
     tree = BinaryTree(root)
     print("Inorder traversal:", tree.inorder())
