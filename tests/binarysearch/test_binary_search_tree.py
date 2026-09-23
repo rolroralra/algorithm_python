@@ -57,7 +57,7 @@ class TestParentPointerOnInsert:
 class TestParentPointerOnDelete:
     def test_delete_leaf_detaches_from_parent(self, bst_factory):
         bst = bst_factory([5, 3, 8])
-        leaf = bst.search(3)
+        leaf = bst.find(3)
         parent = leaf.parent
 
         bst.remove(3)
@@ -69,7 +69,7 @@ class TestParentPointerOnDelete:
         bst = bst_factory([5, 3, 8, 1])
         bst.remove(3)
 
-        node = bst.search(1)
+        node = bst.find(1)
         assert node.parent is bst.root
         assert_parent_consistency(bst.root, None)
 
@@ -112,7 +112,7 @@ class TestParentPointerOnDelete:
 class TestSuccessorPredecessor:
     def test_successor_uses_right_subtree_minimum(self, bst_factory):
         bst = bst_factory([5, 3, 8, 6, 9])
-        node = bst.search(5)
+        node = bst.find(5)
 
         successor = bst.successor(node)
 
@@ -120,7 +120,7 @@ class TestSuccessorPredecessor:
 
     def test_predecessor_uses_left_subtree_maximum(self, bst_factory):
         bst = bst_factory([5, 3, 8, 2, 4])
-        node = bst.search(5)
+        node = bst.find(5)
 
         predecessor = bst.predecessor(node)
 
@@ -128,7 +128,7 @@ class TestSuccessorPredecessor:
 
     def test_successor_climbs_to_ancestor_when_no_right_child(self, bst_factory):
         bst = bst_factory([5, 3, 8, 2, 4])
-        node = bst.search(4)
+        node = bst.find(4)
 
         successor = bst.successor(node)
 
@@ -136,7 +136,7 @@ class TestSuccessorPredecessor:
 
     def test_predecessor_climbs_to_ancestor_when_no_left_child(self, bst_factory):
         bst = bst_factory([5, 3, 8, 6, 9])
-        node = bst.search(6)
+        node = bst.find(6)
 
         predecessor = bst.predecessor(node)
 
@@ -144,19 +144,19 @@ class TestSuccessorPredecessor:
 
     def test_successor_of_maximum_is_none(self, bst_factory):
         bst = bst_factory([5, 3, 8, 2, 4, 6, 9])
-        node = bst.search(bst.find_max())
+        node = bst.find(bst.find_max())
 
         assert bst.successor(node) is None
 
     def test_predecessor_of_minimum_is_none(self, bst_factory):
         bst = bst_factory([5, 3, 8, 2, 4, 6, 9])
-        node = bst.search(bst.find_min())
+        node = bst.find(bst.find_min())
 
         assert bst.predecessor(node) is None
 
     def test_single_node_has_no_successor_or_predecessor(self, bst_factory):
         bst = bst_factory([42])
-        node = bst.search(42)
+        node = bst.find(42)
 
         assert bst.successor(node) is None
         assert bst.predecessor(node) is None
@@ -169,7 +169,7 @@ class TestSuccessorPredecessor:
         bst = bst_factory(values)
 
         for index, value in enumerate(sorted_values):
-            node = bst.search(value)
+            node = bst.find(value)
             successor = bst.successor(node)
             predecessor = bst.predecessor(node)
 
