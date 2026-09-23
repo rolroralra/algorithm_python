@@ -17,4 +17,7 @@ def eratosthenes_sieve(max_number=100):
 
 
 def is_prime(number):
+    if number < 2:
+        return False
+
     return all(number % i != 0 for i in range(2, math.isqrt(number) + 1))

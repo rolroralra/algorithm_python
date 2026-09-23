@@ -30,6 +30,7 @@ class LCA:
                         parent[next_index][depth_level] = parent[parent[next_index][depth_level - 1]][depth_level - 1]
 
                 depth[next_index] = depth[curr_index] + 1
+                stack.append(next_index)
 
 
     def lca(self, a, b):
@@ -56,5 +57,5 @@ class LCA:
         return parent[a][0]
 
 
-    def depth(self, a):
+    def get_depth(self, a):
         return self.depth[a]

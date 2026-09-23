@@ -45,7 +45,7 @@ def __dfs_exactly_by_stack(adjacent_list, is_visited, start_index=0):
 
 
 def __dfs_by_recursive(adjacent_list, is_visited, curr_index=0):
-    is_visited[curr_index] == True
+    is_visited[curr_index] = True
 
     # visit process
 

@@ -56,7 +56,7 @@ class Sort:
         cls.__merge_sort(array, start_inclusive, mid, comp)
         cls.__merge_sort(array, mid, end_exclusive, comp)
         # Merge the two sorted halves
-        cls.__merge(array, start_inclusive, mid, end_exclusive)
+        cls.__merge(array, start_inclusive, mid, end_exclusive, comp)
 
     @classmethod
     def __merge(cls, array, start_inclusive, mid, end_exclusive, comp=lambda a, b: a > b):
@@ -102,8 +102,8 @@ class Sort:
         # Randomly select a pivot index and partition the array around it
         final_pivot_index = cls.__partition_by_pivot_index(array, start_inclusive, end_exclusive, comp)
         # Recursively sort the subarrays on either side of the pivot
-        cls.__quick_sort(array, start_inclusive, final_pivot_index)
-        cls.__quick_sort(array, final_pivot_index + 1, end_exclusive)
+        cls.__quick_sort(array, start_inclusive, final_pivot_index, comp)
+        cls.__quick_sort(array, final_pivot_index + 1, end_exclusive, comp)
 
     @classmethod
     def __partition_by_pivot_index(cls, array, start_inclusive, end_exclusive, comp=lambda a, b: a > b):

@@ -1,8 +1,8 @@
 def binarysearch(sorted_array, target_value, recursive=False):
     if recursive:
-        __binarysearch_by_recursive(sorted_array, target_value, 0, len(sorted_array) - 1)
+        return __binarysearch_by_recursive(sorted_array, target_value, 0, len(sorted_array) - 1)
     else:
-        __binarysearch(sorted_array, target_value)
+        return __binarysearch(sorted_array, target_value)
 
 def __binarysearch(sorted_array, target_value):
     start_index = 0

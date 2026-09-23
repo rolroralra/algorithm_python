@@ -1,7 +1,7 @@
 import sys
 
 def bellman_ford(edge_list: list[tuple], start_index: int):
-    vertex_set = {}
+    vertex_set = set()
     for a, b, length in edge_list:
         vertex_set.add(a)
         vertex_set.add(b)
@@ -10,6 +10,7 @@ def bellman_ford(edge_list: list[tuple], start_index: int):
 
     INF = sys.maxsize
     distance = [INF] * vertex_count
+    distance[start_index] = 0
     prev_index = [-1] * vertex_count
     has_negative_cycle = False
 
