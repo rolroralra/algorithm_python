@@ -173,4 +173,4 @@ cyclic graph : ([], True)
 
 ---
 
-[◀ 이전: Floyd-Warshall 모든 쌍 최단 경로](../floyd_warshall/README.md) | 다음 문서 없음 (마지막 문서)
+[◀ 이전: Floyd-Warshall 모든 쌍 최단 경로](../floyd_warshall/README.md) | [다음: 강한 연결 요소 (SCC) ▶](../strong_connected_components/README.md)

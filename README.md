@@ -35,6 +35,7 @@
   - [플로이드-워셜 (Floyd-Warshall)](algorithm/floyd_warshall/README.md)
 - 그래프 구조 (Graph Structure)
   - [위상 정렬 (Topological Sort)](algorithm/topological_sort/README.md)
+  - [강한 연결 요소 (SCC)](algorithm/strong_connected_components/README.md)
   - [유니온-파인드 (Union-Find)](algorithm/union_find/README.md)
   - [최소 신장 트리 (MST)](algorithm/mst/README.md)
   - [최소 공통 조상 (LCA)](algorithm/lca/README.md)

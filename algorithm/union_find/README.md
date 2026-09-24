@@ -232,5 +232,5 @@ print(uf.rank(uf.find(0)))        # 3     (집합 크기)
 
 ---
 
-이전 문서: 없음 (그래프 알고리즘 문서 시리즈 시작)
+이전 문서: [← 강한 연결 요소 (SCC)](../strong_connected_components/README.md)
 다음 문서: [최소 신장 트리 (MST) →](../mst/README.md)
