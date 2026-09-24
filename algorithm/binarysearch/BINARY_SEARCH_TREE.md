@@ -394,3 +394,7 @@ python3 -m algorithm.binarysearch.binary_search_tree
 ```
 
 `__main__` 데모에서 정렬된 배열을 그대로 삽입했을 때 트리 높이가 `n`까지 치솟는 것(사실상 연결 리스트)을 확인할 수 있습니다. 같은 값을 `AVLTree`/`RedBlackTree`에 넣었을 때와 비교해보면 균형 유지의 효과가 뚜렷하게 보입니다.
+
+---
+
+[◀ 이전: 이진 트리](./BINARY_TREE.md) | [다음: AVL 트리 ▶](./AVL_TREE.md)

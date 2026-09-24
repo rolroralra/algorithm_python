@@ -189,3 +189,7 @@ python3 -m algorithm.binarysearch.avl_tree
 ```
 
 `print_tree()` 출력으로 정렬된 배열을 넣어도 트리가 균형 잡힌 모양을 유지하는 걸 눈으로 확인할 수 있습니다. `binary_search_tree.py`의 worst-case 데모(높이 10)와 비교해보세요.
+
+---
+
+[◀ 이전: 이진 탐색 트리](./BINARY_SEARCH_TREE.md) | [다음: Red-Black 트리 ▶](./RED_BLACK_TREE.md)

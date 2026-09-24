@@ -176,3 +176,7 @@ python3 -m algorithm.binarysearch.red_black_tree
 ```
 
 `print_tree()` 출력으로는 색 정보가 보이지 않으니, 궁금하면 `RBNode.color`를 직접 찍어보며 규칙 4/5가 항상 지켜지는지 확인해봐도 좋습니다. `binary_search_tree.py`의 worst-case 데모(높이 10)와 비교하면, 정렬된 배열을 그대로 넣어도 트리가 낮게 유지되는 걸 확인할 수 있습니다.
+
+---
+
+[◀ 이전: AVL 트리](./AVL_TREE.md) | [인덱스로 돌아가기 ▶](./README.md)
