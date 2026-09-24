@@ -1,6 +1,6 @@
 import sys
 
-def bellman_ford(edge_list: list[tuple], start_index: int):
+def bellman_ford(edge_list: list[tuple], start_index: int) -> tuple[list[int], list[int], bool]:
     vertex_set = set()
     for a, b, length in edge_list:
         vertex_set.add(a)
@@ -26,9 +26,16 @@ def bellman_ford(edge_list: list[tuple], start_index: int):
 
     return distance, prev_index, has_negative_cycle
 
+def shortest_path(prev_index: list[int], target_index) -> list[int]:
+    # A worst-case (path-shaped) graph recurses as deep as the path is long, so the
+    # threshold must stay well below sys.getrecursionlimit() (1000 by default) to leave
+    # headroom for the caller's own call stack.
+    if len(prev_index) < 500:
+        return _shorted_path_by_recursive(prev_index, target_index)
 
-def shortest_path(prev_index: list[int], target_index):
-    vertex_count = len(prev_index)
+    return _shortest_path_by_loop(prev_index, target_index)
+
+def _shortest_path_by_loop(prev_index: list[int], target_index) -> list[int]:
     stack = []
 
     index = target_index
@@ -39,3 +46,16 @@ def shortest_path(prev_index: list[int], target_index):
     stack.reverse()
 
     return stack
+
+def _shorted_path_by_recursive(prev_index: list[int], target_index) -> list[int]:
+    if target_index == -1:
+        return []
+
+    path = _shorted_path_by_recursive(prev_index, prev_index[target_index])
+    path.append(target_index)
+
+    return path
+
+def print_shortest_path(prev_index: list[int], target_index) -> None:
+    path = shortest_path(prev_index, target_index)
+    print(" -> ".join(str(index) for index in path))

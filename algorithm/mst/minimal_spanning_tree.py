@@ -15,7 +15,7 @@ def minimal_spanning_tree(graph, algorithm: MinimalSpanningTreeAlgorithm):
     raise NotImplementedError("Invalid Algorithm")
 
 
-def mst_kruskal_algorithm(edge_list: list[tuple[int, int, int]], vertex_size: int = None) -> tuple[int, list[tuple[int, int, int]]]:
+def mst_kruskal_algorithm(edge_list: list[tuple[int, int, int]], vertex_size: int | None = None) -> tuple[int, list[tuple[int, int, int]]]:
     """
     Minimal Spanning Tree by Kruskal Algorithm
 

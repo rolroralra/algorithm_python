@@ -2,7 +2,13 @@ import sys
 
 import pytest
 
+from algorithm.bellman_ford import bellman_ford as bellman_ford_module
 from algorithm.bellman_ford.bellman_ford import bellman_ford, shortest_path
+
+
+def chain_prev_index(size: int) -> list[int]:
+    """prev_index for a straight chain 0 -> 1 -> 2 -> ... -> size - 1."""
+    return [-1] + list(range(size - 1))
 
 
 @pytest.mark.unit
@@ -48,3 +54,79 @@ class TestBellmanFord:
 
         assert distance[2] == sys.maxsize
         assert distance[3] == sys.maxsize
+
+
+# `shortest_path` switches from a recursive to a loop-based path reconstruction once
+# `prev_index` holds 500 or more elements (`len(prev_index) < 500` in
+# bellman_ford.py:33). The threshold sits well below sys.getrecursionlimit() (1000 by
+# default) because a worst-case, path-shaped graph recurses as deep as the path is
+# long, and the caller's own call stack (e.g. pytest's) already consumes part of that
+# budget -- see test_recursive_implementation_handles_worst_case_chain_at_threshold
+# below for the regression coverage that would have caught this when the threshold
+# used to be 1000.
+@pytest.mark.unit
+class TestShortestPathDispatchThreshold:
+    def spy_on(self, monkeypatch, name):
+        calls = []
+        original = getattr(bellman_ford_module, name)
+
+        def spy(*args, **kwargs):
+            calls.append(args)
+            return original(*args, **kwargs)
+
+        monkeypatch.setattr(bellman_ford_module, name, spy)
+        return calls
+
+    def test_size_below_threshold_uses_recursive_implementation(self, monkeypatch):
+        recursive_calls = self.spy_on(monkeypatch, "_shorted_path_by_recursive")
+        loop_calls = self.spy_on(monkeypatch, "_shortest_path_by_loop")
+
+        prev_index = [-1] * 499
+        shortest_path(prev_index, 0)
+
+        assert recursive_calls
+        assert not loop_calls
+
+    def test_size_at_threshold_uses_loop_implementation(self, monkeypatch):
+        recursive_calls = self.spy_on(monkeypatch, "_shorted_path_by_recursive")
+        loop_calls = self.spy_on(monkeypatch, "_shortest_path_by_loop")
+
+        prev_index = [-1] * 500
+        shortest_path(prev_index, 0)
+
+        assert loop_calls
+        assert not recursive_calls
+
+    def test_size_above_threshold_uses_loop_implementation(self, monkeypatch):
+        recursive_calls = self.spy_on(monkeypatch, "_shorted_path_by_recursive")
+        loop_calls = self.spy_on(monkeypatch, "_shortest_path_by_loop")
+
+        prev_index = [-1] * 501
+        shortest_path(prev_index, 0)
+
+        assert loop_calls
+        assert not recursive_calls
+
+    def test_recursive_implementation_reconstructs_short_chain(self):
+        size = 400
+        prev_index = chain_prev_index(size)
+
+        assert shortest_path(prev_index, size - 1) == list(range(size))
+
+    def test_loop_implementation_reconstructs_long_chain_without_recursion_limit(self):
+        # A chain far longer than sys.getrecursionlimit() would overflow the recursive
+        # implementation; the loop-based one must handle it without issue.
+        size = 5000
+        prev_index = chain_prev_index(size)
+
+        assert shortest_path(prev_index, size - 1) == list(range(size))
+
+    def test_recursive_implementation_handles_worst_case_chain_at_threshold(self):
+        # Regression coverage for the recursion-depth bug this threshold fixes: a
+        # worst-case (path-shaped) graph whose chain length sits right at the
+        # recursive/loop boundary must NOT raise RecursionError, even under a test
+        # runner's own call stack overhead.
+        size = 499
+        prev_index = chain_prev_index(size)
+
+        assert shortest_path(prev_index, size - 1) == list(range(size))
