@@ -9,8 +9,8 @@ def scc_by_tarjan(adj_list: list[list[int]]) -> list[list[int]]:
     """
     vertex_count = len(adj_list)
     visit = [0] * vertex_count
-    low_link = [0] * vertex_count
-    on_stack = [False] * vertex_count
+    low_link = [0] * vertex_count       # minimum visit sequence reachable from the current node (including itself)
+    on_stack = [False] * vertex_count   # whether the current node is in the stack or not
     stack = []
     visit_sequence = 1
     scc_list = []
@@ -26,8 +26,11 @@ def scc_by_tarjan(adj_list: list[list[int]]) -> list[list[int]]:
         for next_index in adj_list[curr_index]:
             if visit[next_index] == 0:
                 dfs(next_index)
+
+                # Update the low-link value of the current node based on the low-link value of the next node
                 low_link[curr_index] = min(low_link[curr_index], low_link[next_index])
             elif on_stack[next_index]:
+                # Update the low-link value of the current node based on the visit value of the next node
                 low_link[curr_index] = min(low_link[curr_index], visit[next_index])
 
         if low_link[curr_index] == visit[curr_index]:
@@ -68,12 +71,15 @@ def scc_by_kosaraju(adj_list: list[list[int]]) -> list[list[int]]:
             if not is_visited[next_index]:
                 dfs_finish_order(next_index)
 
+        # After visiting all reachable nodes from curr_index, add it to the finish order
         finish_order.append(curr_index)
 
+    # First pass: DFS to determine the finish order of nodes
     for i in range(vertex_count):
         if not is_visited[i]:
             dfs_finish_order(i)
 
+    # Create the reversed graph
     reversed_adj_list = [[] for _ in range(vertex_count)]
     for curr_index in range(vertex_count):
         for next_index in adj_list[curr_index]:
@@ -83,6 +89,7 @@ def scc_by_kosaraju(adj_list: list[list[int]]) -> list[list[int]]:
     scc_list = []
 
     def dfs_collect(curr_index: int, scc: list[int]) -> None:
+        # Add the current node to the current strongly connected component
         is_visited[curr_index] = True
         scc.append(curr_index)
 
@@ -90,6 +97,7 @@ def scc_by_kosaraju(adj_list: list[list[int]]) -> list[list[int]]:
             if not is_visited[next_index]:
                 dfs_collect(next_index, scc)
 
+    # Second pass: DFS on the reversed graph in the order of decreasing finish times
     for curr_index in reversed(finish_order):
         if not is_visited[curr_index]:
             scc = []
